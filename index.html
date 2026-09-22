@@ -1,0 +1,1036 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta property="og:title" content="Srinivas Koya | Data Engineer">
+<meta property="og:description" content="Data Engineer building batch and streaming lakehouse pipelines on Azure, Databricks and Snowflake.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%230c6b8a'/%3E%3Ctext x='16' y='21' font-family='Arial' font-weight='700' font-size='14' fill='white' text-anchor='middle'%3ESK%3C/text%3E%3C/svg%3E">
+<style>[hidden]{display:none!important}body{margin:0}</style>
+<title>Srinivas Koya | Data Engineer</title>
+<meta name="description" content="Sesha Sai Srinivas Koya — Data Engineer building batch and streaming lakehouse pipelines on Azure, Databricks and Snowflake.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,600;12..96,700;12..96,800&family=Instrument+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+:root{
+  --bg:#f3f6f8; --bg-2:#e9eef2; --surface:#ffffff; --surface-2:#f7f9fb;
+  --ink:#0d1b24; --ink-2:#3b4b57; --ink-3:#6a7985; --line:#d7e0e6; --line-2:#c3cfd8;
+  --accent:#0c6b8a; --accent-ink:#ffffff; --accent-soft:#dcedf3; --accent-2:#0a5670;
+  --bronze:#a8662f; --silver:#7d8a94; --gold:#b98f12;
+  --shadow:0 1px 2px rgba(13,27,36,.05),0 10px 30px -12px rgba(13,27,36,.14);
+  --glow:rgba(12,107,138,.10);
+  --f-display:"Bricolage Grotesque",ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif;
+  --f-body:"Instrument Sans",ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+  --f-mono:"JetBrains Mono",ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+  --r:14px; --r-sm:9px; --maxw:1120px;
+  --ease:cubic-bezier(.22,.8,.24,1);
+  color-scheme:light;
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    --bg:#0a1117; --bg-2:#0e171f; --surface:#111c25; --surface-2:#15212b;
+    --ink:#e5edf2; --ink-2:#b2c0ca; --ink-3:#7f909c; --line:#1f2e39; --line-2:#2b3d4a;
+    --accent:#5cc0de; --accent-ink:#06222c; --accent-soft:#12303c; --accent-2:#86d3ea;
+    --bronze:#d08a4f; --silver:#aab6bf; --gold:#e0b93a;
+    --shadow:0 1px 2px rgba(0,0,0,.3),0 14px 34px -14px rgba(0,0,0,.6);
+    --glow:rgba(92,192,222,.10);
+    color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0a1117; --bg-2:#0e171f; --surface:#111c25; --surface-2:#15212b;
+  --ink:#e5edf2; --ink-2:#b2c0ca; --ink-3:#7f909c; --line:#1f2e39; --line-2:#2b3d4a;
+  --accent:#5cc0de; --accent-ink:#06222c; --accent-soft:#12303c; --accent-2:#86d3ea;
+  --bronze:#d08a4f; --silver:#aab6bf; --gold:#e0b93a;
+  --shadow:0 1px 2px rgba(0,0,0,.3),0 14px 34px -14px rgba(0,0,0,.6);
+  --glow:rgba(92,192,222,.10);
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth;scroll-padding-top:84px}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:16px;line-height:1.6;-webkit-font-smoothing:antialiased;transition:background-color .45s var(--ease),color .45s var(--ease)}
+body::before{content:"";position:fixed;inset:0;pointer-events:none;z-index:0;
+  background:radial-gradient(900px 500px at 85% -10%,var(--glow),transparent 60%),radial-gradient(700px 420px at -10% 30%,var(--glow),transparent 60%)}
+a{color:inherit}
+img{max-width:100%;display:block}
+h1,h2,h3,h4{font-family:var(--f-display);line-height:1.1;margin:0;text-wrap:balance;letter-spacing:-.02em}
+p{margin:0}
+:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border-radius:6px}
+.wrap{max-width:var(--maxw);margin:0 auto;padding-inline:20px;position:relative;z-index:1}
+.mono{font-family:var(--f-mono);font-size:.78rem;letter-spacing:.02em}
+.eyebrow{font-family:var(--f-mono);font-size:.74rem;text-transform:uppercase;letter-spacing:.14em;color:var(--accent);display:inline-flex;align-items:center;gap:10px}
+.eyebrow::before{content:"";width:22px;height:1px;background:currentColor}
+
+/* ---------- header ---------- */
+.hdr{position:sticky;top:env(safe-area-inset-top,0px);z-index:50;backdrop-filter:saturate(1.4) blur(14px);-webkit-backdrop-filter:saturate(1.4) blur(14px);background:color-mix(in srgb,var(--bg) 78%,transparent);border-bottom:1px solid transparent;transition:border-color .3s,background-color .45s}
+.hdr.scrolled{border-bottom-color:var(--line)}
+.hdr .wrap{display:flex;align-items:center;gap:18px;height:66px}
+.brand{font-family:var(--f-display);font-weight:800;font-size:1.2rem;text-decoration:none;letter-spacing:-.03em;display:flex;align-items:center;gap:10px}
+.brand .mk{width:30px;height:30px;border-radius:8px;background:var(--ink);color:var(--bg);display:grid;place-items:center;font-size:.86rem;letter-spacing:0}
+.brand span.dim{color:var(--accent)}
+.nav{display:flex;gap:2px;margin-left:auto}
+.nav a{text-decoration:none;font-size:.9rem;color:var(--ink-2);padding:8px 11px;border-radius:8px;transition:color .2s,background-color .2s}
+.nav a:hover,.nav a.on{color:var(--ink);background:var(--bg-2)}
+.hdr-actions{display:flex;align-items:center;gap:8px}
+.icon-btn{width:38px;height:38px;border-radius:10px;border:1px solid var(--line);background:var(--surface);color:var(--ink);display:grid;place-items:center;cursor:pointer;transition:border-color .2s,transform .2s,background-color .45s}
+.icon-btn:hover{border-color:var(--line-2);transform:translateY(-1px)}
+.icon-btn svg{width:18px;height:18px}
+.theme-btn .sun{display:none}
+:root[data-theme="dark"] .theme-btn .sun{display:block}
+:root[data-theme="dark"] .theme-btn .moon{display:none}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .theme-btn .sun{display:block}:root:not([data-theme="light"]) .theme-btn .moon{display:none}}
+.btn{display:inline-flex;align-items:center;gap:9px;text-decoration:none;font-weight:600;font-size:.93rem;padding:11px 18px;border-radius:11px;border:1px solid transparent;cursor:pointer;transition:transform .25s var(--ease),background-color .25s,border-color .25s,box-shadow .25s;font-family:var(--f-body)}
+.btn svg{width:16px;height:16px}
+.btn-primary{background:var(--accent);color:var(--accent-ink)}
+.btn-primary:hover{transform:translateY(-2px);box-shadow:0 10px 24px -10px var(--accent)}
+.btn-ghost{border-color:var(--line-2);color:var(--ink);background:var(--surface)}
+.btn-ghost:hover{transform:translateY(-2px);border-color:var(--ink-3)}
+.btn-sm{padding:8px 14px;font-size:.86rem}
+.menu-btn{display:none}
+.mnav{display:none}
+@media (max-width:900px){
+  .nav,.hdr-actions .btn{display:none}
+  .menu-btn{display:grid}
+  .hdr-actions{margin-left:auto}
+  .mnav{display:block;position:fixed;inset:66px 0 auto 0;z-index:49;background:var(--bg);border-bottom:1px solid var(--line);padding:10px 20px 22px;transform:translateY(-8px);opacity:0;pointer-events:none;transition:opacity .25s,transform .3s var(--ease)}
+  .mnav.open{opacity:1;transform:none;pointer-events:auto}
+  .mnav a{display:block;padding:12px 4px;text-decoration:none;border-bottom:1px solid var(--line);font-weight:500}
+}
+
+/* ---------- views ---------- */
+.view{animation:viewIn .55s var(--ease) both}
+@keyframes viewIn{from{opacity:.001;transform:translateY(10px)}to{opacity:1;transform:none}}
+section{padding-block:84px;position:relative;z-index:1}
+.sec-head{display:flex;flex-direction:column;gap:14px;margin-bottom:40px;max-width:720px}
+.sec-head h2{font-size:clamp(1.9rem,3.6vw,2.7rem);font-weight:700}
+.sec-head p{color:var(--ink-2);font-size:1.05rem;max-width:62ch}
+
+/* ---------- hero ---------- */
+.hero{padding-block:56px 40px}
+.hero-grid{display:grid;grid-template-columns:1.25fr .85fr;gap:56px;align-items:center}
+.quote{font-family:var(--f-mono);font-size:.82rem;color:var(--ink-3);margin-bottom:22px;display:flex;gap:10px;align-items:center}
+.status{display:inline-flex;align-items:center;gap:8px;padding:5px 11px;border-radius:999px;background:var(--accent-soft);color:var(--accent-2);font-size:.78rem;font-weight:600}
+.status i{width:7px;height:7px;border-radius:50%;background:var(--accent);box-shadow:0 0 0 0 var(--accent);animation:pulse 2.2s infinite}
+@keyframes pulse{0%{box-shadow:0 0 0 0 color-mix(in srgb,var(--accent) 60%,transparent)}70%{box-shadow:0 0 0 8px transparent}100%{box-shadow:0 0 0 0 transparent}}
+.hero h1{font-size:clamp(2.5rem,6vw,4.6rem);font-weight:800;letter-spacing:-.035em;line-height:1.02;margin-top:18px}
+.hero h1 .nm{color:var(--accent)}
+.roll{display:flex;flex-wrap:wrap;align-items:baseline;gap:.35em;font-family:var(--f-display);font-weight:600;font-size:clamp(1.3rem,2.6vw,1.9rem);margin-top:18px;letter-spacing:-.02em;color:var(--ink-2)}
+.roll-box{display:inline-block;height:1.25em;overflow:hidden;vertical-align:bottom;position:relative}
+.roll-list{display:flex;flex-direction:column;align-items:flex-start;transition:transform .7s var(--ease)}
+.roll-list span{height:1.25em;line-height:1.25em;color:var(--ink);white-space:nowrap;background:linear-gradient(transparent 62%,var(--accent-soft) 62%)}
+.hero-copy{color:var(--ink-2);font-size:1.07rem;max-width:58ch;margin-top:22px}
+.hero-cta{display:flex;flex-wrap:wrap;gap:12px;margin-top:30px}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:0;margin-top:44px;border-top:1px solid var(--line)}
+.stat{padding:18px 16px 4px 0}
+.stat+.stat{padding-left:18px;border-left:1px solid var(--line)}
+.stat b{display:block;font-family:var(--f-display);font-size:clamp(1.5rem,2.6vw,2rem);font-weight:700;letter-spacing:-.03em;font-variant-numeric:tabular-nums}
+.stat span{font-size:.82rem;color:var(--ink-3);line-height:1.35;display:block;margin-top:2px}
+
+.profile{background:var(--surface);border:1px solid var(--line);border-radius:22px;padding:22px;box-shadow:var(--shadow);position:relative;transition:background-color .45s,border-color .45s}
+.photo{aspect-ratio:1/1;border-radius:50%;overflow:hidden;width:78%;max-width:100%;margin:6px auto 0;position:relative;box-shadow:0 0 0 6px var(--surface),0 0 0 7px var(--line-2)}
+.photo img{width:100%;height:100%;object-fit:cover;transform:scale(1.02)}
+.profile h3{font-size:1.35rem;text-align:center;margin-top:20px}
+.profile .role{text-align:center;color:var(--ink-3);font-size:.9rem;margin-top:4px}
+.chips{display:flex;flex-wrap:wrap;gap:6px;justify-content:center;margin-top:14px}
+.chip{font-family:var(--f-mono);font-size:.72rem;padding:4px 9px;border-radius:7px;background:var(--bg-2);color:var(--ink-2);border:1px solid var(--line)}
+.cert{display:flex;gap:12px;align-items:center;margin-top:18px;padding:12px 14px;border-radius:12px;background:var(--surface-2);border:1px dashed var(--line-2)}
+.cert .seal{flex:none;width:38px;height:38px;border-radius:50%;display:grid;place-items:center;background:linear-gradient(135deg,var(--gold),var(--bronze));color:#fff}
+.cert .seal svg{width:18px;height:18px}
+.cert b{display:block;font-size:.88rem;line-height:1.3}
+.cert span{font-size:.78rem;color:var(--ink-3)}
+
+/* pipeline strip */
+.pipe{margin-top:48px;border:1px solid var(--line);border-radius:var(--r);background:var(--surface);padding:18px 20px;box-shadow:var(--shadow);transition:background-color .45s,border-color .45s}
+.pipe-top{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:14px}
+.pipe-top .mono{color:var(--ink-3)}
+.pipe-row{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));align-items:center;position:relative}
+.stage{position:relative;z-index:2;display:flex;flex-direction:column;align-items:center;gap:6px;text-align:center}
+.node{width:46px;height:46px;border-radius:12px;display:grid;place-items:center;background:var(--surface-2);border:1px solid var(--line-2);font-family:var(--f-mono);font-size:.7rem;font-weight:500;color:var(--ink-2)}
+.node.b{border-color:var(--bronze);color:var(--bronze)}
+.node.s{border-color:var(--silver);color:var(--silver)}
+.node.g{border-color:var(--gold);color:var(--gold)}
+.node.bi{border-color:var(--accent);color:var(--accent)}
+.stage small{font-size:.74rem;color:var(--ink-3);line-height:1.25}
+.stage small b{display:block;color:var(--ink);font-weight:600;font-size:.8rem}
+.track{position:absolute;left:10%;right:10%;top:23px;height:2px;background:repeating-linear-gradient(90deg,var(--line-2) 0 6px,transparent 6px 11px);z-index:1;overflow:hidden}
+.pkt{position:absolute;top:-2px;left:0;width:18px;height:6px;border-radius:3px;background:var(--accent);opacity:.85;animation:flow 4.2s linear infinite}
+.pkt:nth-child(2){animation-delay:-1.4s;background:var(--bronze)}
+.pkt:nth-child(3){animation-delay:-2.8s;background:var(--gold)}
+@keyframes flow{from{transform:translateX(-20px)}to{transform:translateX(calc(80vw))}}
+
+/* ---------- projects ---------- */
+.proj-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:22px}
+.proj{background:var(--surface);border:1px solid var(--line);border-radius:18px;overflow:hidden;display:flex;flex-direction:column;text-decoration:none;transition:transform .4s var(--ease),box-shadow .4s var(--ease),border-color .3s,background-color .45s}
+.proj:hover{transform:translateY(-4px);box-shadow:var(--shadow);border-color:var(--line-2)}
+.proj.feature{grid-column:1/-1;display:grid;grid-template-columns:1.1fr 1fr}
+.proj-art{background:var(--bg-2);border-bottom:1px solid var(--line);min-height:170px;position:relative;overflow:hidden;padding:20px;display:flex;align-items:flex-end;transition:background-color .45s}
+.proj.feature .proj-art{border-bottom:0;border-right:1px solid var(--line);min-height:320px}
+.proj-art svg{position:absolute;inset:0;width:100%;height:100%}
+.proj-body{padding:24px 24px 22px;display:flex;flex-direction:column;gap:12px;flex:1}
+.proj-meta{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.tag{font-family:var(--f-mono);font-size:.7rem;text-transform:uppercase;letter-spacing:.1em;color:var(--accent);background:var(--accent-soft);padding:3px 8px;border-radius:6px}
+.proj-meta .mono{color:var(--ink-3)}
+.proj h3{font-size:1.4rem;font-weight:700}
+.proj.feature h3{font-size:clamp(1.6rem,2.8vw,2.1rem)}
+.proj p{color:var(--ink-2);font-size:.97rem}
+.proj .chips{justify-content:flex-start;margin-top:auto;padding-top:6px}
+.proj-link{display:inline-flex;align-items:center;gap:8px;font-weight:600;font-size:.9rem;color:var(--accent);margin-top:4px}
+.proj-link svg{width:15px;height:15px;transition:transform .3s var(--ease)}
+.proj:hover .proj-link svg{transform:translateX(4px)}
+.kpis{display:flex;gap:18px;flex-wrap:wrap;margin-top:4px}
+.kpis div{font-size:.8rem;color:var(--ink-3)}
+.kpis b{display:block;font-family:var(--f-display);font-size:1.25rem;color:var(--ink);letter-spacing:-.02em}
+
+/* ---------- skills ---------- */
+.skill-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px}
+.skill{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:22px;transition:background-color .45s,border-color .3s}
+.skill:hover{border-color:var(--line-2)}
+.skill h3{font-size:1.08rem;font-weight:700;display:flex;align-items:center;gap:10px;margin-bottom:14px}
+.skill h3 .ic{width:32px;height:32px;border-radius:9px;background:var(--accent-soft);color:var(--accent);display:grid;place-items:center;flex:none}
+.skill h3 .ic svg{width:17px;height:17px}
+.skill ul{list-style:none;margin:0;padding:0;display:flex;flex-wrap:wrap;gap:6px}
+.skill li{font-size:.84rem;padding:5px 10px;border-radius:8px;background:var(--surface-2);border:1px solid var(--line);color:var(--ink-2);transition:border-color .2s,color .2s}
+.skill li:hover{border-color:var(--accent);color:var(--ink)}
+
+/* ---------- domain ---------- */
+.domain{display:grid;grid-template-columns:1fr 1fr;gap:40px;align-items:start}
+.domain p{color:var(--ink-2);font-size:1.05rem}
+.domain p + p{margin-top:14px}
+.medal{display:flex;flex-direction:column;gap:10px}
+.tier{display:grid;grid-template-columns:82px 1fr;gap:16px;align-items:center;padding:16px 18px;border-radius:12px;background:var(--surface);border:1px solid var(--line);transition:transform .3s var(--ease),background-color .45s}
+.tier:hover{transform:translateX(4px)}
+.tier .t{font-family:var(--f-mono);font-size:.72rem;text-transform:uppercase;letter-spacing:.12em;font-weight:500;display:flex;align-items:center;gap:8px}
+.tier .t::before{content:"";width:10px;height:10px;border-radius:50%;background:currentColor}
+.tier.b .t{color:var(--bronze)} .tier.s .t{color:var(--silver)} .tier.g .t{color:var(--gold)} .tier.c .t{color:var(--accent)}
+.tier p{font-size:.92rem;color:var(--ink-2)}
+.inds{display:flex;gap:8px;flex-wrap:wrap;margin-top:22px}
+
+/* ---------- experience ---------- */
+.timeline{position:relative;display:flex;flex-direction:column;gap:18px}
+.job{display:grid;grid-template-columns:200px 1fr;gap:28px;padding:26px;background:var(--surface);border:1px solid var(--line);border-radius:var(--r);transition:background-color .45s,border-color .3s}
+.job:hover{border-color:var(--line-2)}
+.job-when{display:flex;flex-direction:column;gap:6px}
+.job-when .mono{color:var(--ink-3)}
+.logo{width:48px;height:48px;border-radius:12px;display:grid;place-items:center;font-family:var(--f-display);font-weight:800;font-size:1.05rem;color:#fff;margin-bottom:8px;letter-spacing:-.02em}
+.job h3{font-size:1.3rem;font-weight:700}
+.job .org{color:var(--ink-2);margin-top:4px;font-size:.95rem}
+.job ul{margin:14px 0 0;padding-left:18px;color:var(--ink-2);display:flex;flex-direction:column;gap:7px;font-size:.95rem}
+.job ul li::marker{color:var(--accent)}
+.job .more{margin-top:12px}
+.job details summary{cursor:pointer;color:var(--accent);font-weight:600;font-size:.88rem;list-style:none;display:inline-flex;gap:6px;align-items:center}
+.job details summary::-webkit-details-marker{display:none}
+.job details summary svg{width:14px;height:14px;transition:transform .3s var(--ease)}
+.job details[open] summary svg{transform:rotate(180deg)}
+.now{font-size:.7rem;font-weight:600;color:var(--accent-2);background:var(--accent-soft);padding:2px 8px;border-radius:999px;width:max-content}
+
+/* ---------- education / achievements ---------- */
+.edu-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px}
+.edu{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:24px;display:flex;flex-direction:column;gap:10px;transition:background-color .45s}
+.edu .mono{color:var(--ink-3)}
+.edu h3{font-size:1.15rem;font-weight:700}
+.edu p{color:var(--ink-2);font-size:.93rem}
+.edu .deg{font-family:var(--f-display);font-weight:800;font-size:2.2rem;letter-spacing:-.04em;color:var(--accent);line-height:1}
+.ach-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:0;border:1px solid var(--line);border-radius:var(--r);background:var(--surface);overflow:hidden;transition:background-color .45s}
+.ach{padding:24px 22px;border-right:1px solid var(--line)}
+.ach:last-child{border-right:0}
+.ach b{display:block;font-family:var(--f-display);font-weight:800;font-size:clamp(1.8rem,3vw,2.4rem);letter-spacing:-.04em;color:var(--ink);font-variant-numeric:tabular-nums}
+.ach span{display:block;font-size:.88rem;color:var(--ink-2);margin-top:4px}
+.ach small{display:block;font-family:var(--f-mono);font-size:.7rem;color:var(--ink-3);margin-top:10px;text-transform:uppercase;letter-spacing:.08em}
+
+/* ---------- contact ---------- */
+.contact{background:var(--ink);color:var(--bg);border-radius:26px;padding:clamp(28px,5vw,56px);display:grid;grid-template-columns:1.2fr 1fr;gap:40px;align-items:center;position:relative;overflow:hidden;transition:background-color .45s,color .45s}
+.contact::after{content:"";position:absolute;right:-120px;top:-120px;width:360px;height:360px;border-radius:50%;border:1px solid color-mix(in srgb,var(--bg) 18%,transparent);box-shadow:0 0 0 50px color-mix(in srgb,var(--bg) 3%,transparent),0 0 0 100px color-mix(in srgb,var(--bg) 2%,transparent)}
+.contact h2{font-size:clamp(1.9rem,4vw,3rem);font-weight:800;color:var(--bg)}
+.contact p{color:color-mix(in srgb,var(--bg) 72%,transparent);margin-top:14px;max-width:48ch}
+.clinks{display:flex;flex-direction:column;gap:10px;position:relative;z-index:1}
+.clink{display:flex;align-items:center;gap:14px;padding:14px 16px;border-radius:13px;text-decoration:none;background:color-mix(in srgb,var(--bg) 7%,transparent);border:1px solid color-mix(in srgb,var(--bg) 14%,transparent);color:var(--bg);transition:transform .3s var(--ease),background-color .3s}
+.clink:hover{transform:translateX(6px);background:color-mix(in srgb,var(--bg) 13%,transparent)}
+.clink svg{width:20px;height:20px;flex:none}
+.clink span{display:flex;flex-direction:column;line-height:1.3;min-width:0}
+.clink small{font-size:.75rem;color:color-mix(in srgb,var(--bg) 60%,transparent)}
+.clink b{font-weight:600;font-size:.93rem;overflow-wrap:anywhere}
+.clink .arr{margin-left:auto;width:16px;height:16px;opacity:.6}
+.foot{padding-block:36px 44px;display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;color:var(--ink-3);font-size:.86rem;border-top:1px solid var(--line);margin-top:70px}
+.foot a{color:var(--ink-2);text-decoration:none}
+.foot a:hover{color:var(--accent)}
+.foot nav{display:flex;gap:18px;flex-wrap:wrap}
+
+/* ---------- sub pages ---------- */
+.back{display:flex;width:max-content;align-items:center;gap:8px;text-decoration:none;color:var(--ink-2);font-size:.9rem;font-weight:500;padding:6px 0;margin-bottom:26px;transition:color .2s,gap .3s var(--ease)}
+.back:hover{color:var(--accent);gap:12px}
+.back svg{width:16px;height:16px}
+.page-hero{padding-block:48px 30px}
+.page-hero h1{font-size:clamp(2.2rem,5vw,3.8rem);font-weight:800;letter-spacing:-.035em;margin-top:14px;max-width:18ch}
+.page-hero .lede{font-size:1.15rem;color:var(--ink-2);max-width:62ch;margin-top:18px}
+.page-hero .hero-cta{margin-top:26px}
+.facts{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));border-top:1px solid var(--line);border-bottom:1px solid var(--line);margin-top:38px}
+.facts div{padding:16px 16px 16px 0}
+.facts div+div{padding-left:16px;border-left:1px solid var(--line)}
+.facts small{display:block;font-family:var(--f-mono);font-size:.7rem;text-transform:uppercase;letter-spacing:.1em;color:var(--ink-3)}
+.facts b{display:block;font-weight:600;margin-top:4px;font-size:.95rem}
+.article{display:grid;grid-template-columns:220px 1fr;gap:48px;padding-block:40px 20px}
+.toc{position:sticky;top:96px;align-self:start;display:flex;flex-direction:column;gap:4px}
+.toc a{text-decoration:none;color:var(--ink-3);font-size:.88rem;padding:6px 10px;border-left:2px solid var(--line);transition:color .2s,border-color .2s}
+.toc a:hover{color:var(--ink);border-left-color:var(--accent)}
+.prose{max-width:70ch}
+.prose h2{font-size:1.6rem;font-weight:700;margin:44px 0 14px}
+.prose h2:first-child{margin-top:0}
+.prose h3{font-size:1.15rem;font-weight:700;margin:26px 0 8px}
+.prose p{color:var(--ink-2);margin:0 0 14px;font-size:1.02rem}
+.prose ul{color:var(--ink-2);padding-left:20px;margin:0 0 16px;display:flex;flex-direction:column;gap:8px}
+.prose li::marker{color:var(--accent)}
+.prose strong{color:var(--ink)}
+.flow{overflow-x:auto;margin:10px 0 24px;border:1px solid var(--line);border-radius:var(--r);background:var(--surface);padding:18px}
+.flow-inner{display:flex;align-items:stretch;gap:10px;min-width:720px}
+.fstep{flex:1;border:1px solid var(--line);border-radius:10px;padding:12px;background:var(--surface-2);font-size:.82rem;color:var(--ink-2)}
+.fstep b{display:block;color:var(--ink);font-size:.88rem;margin-bottom:4px}
+.fstep .mono{display:block;font-size:.66rem;text-transform:uppercase;letter-spacing:.1em;margin-bottom:6px}
+.farr{align-self:center;color:var(--ink-3);flex:none}
+.callout{border-radius:var(--r);background:var(--accent-soft);padding:18px 20px;margin:20px 0;color:var(--ink)}
+.callout p{color:var(--ink);margin:0}
+.next-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px;margin-top:20px}
+.next{display:flex;flex-direction:column;gap:6px;padding:20px;border:1px solid var(--line);border-radius:var(--r);background:var(--surface);text-decoration:none;transition:transform .3s var(--ease),border-color .3s,background-color .45s}
+.next:hover{transform:translateY(-3px);border-color:var(--accent)}
+.next small{font-family:var(--f-mono);font-size:.7rem;text-transform:uppercase;letter-spacing:.1em;color:var(--ink-3)}
+.next b{font-family:var(--f-display);font-size:1.15rem;letter-spacing:-.02em}
+.principles{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px;padding-block:30px}
+.pr{padding:26px;border:1px solid var(--line);border-radius:var(--r);background:var(--surface);transition:background-color .45s}
+.pr .mono{color:var(--accent);text-transform:uppercase;letter-spacing:.1em;font-size:.7rem}
+.pr h3{font-size:1.3rem;font-weight:700;margin:8px 0 10px}
+.pr p{color:var(--ink-2);font-size:.97rem}
+.pr p+p{margin-top:10px}
+.pr .ev{margin-top:14px;padding-top:12px;border-top:1px dashed var(--line-2);font-size:.85rem;color:var(--ink-3)}
+.pr .ev b{color:var(--ink-2);font-weight:600}
+/* resume */
+.resume{background:var(--surface);border:1px solid var(--line);border-radius:18px;padding:clamp(22px,5vw,52px);margin-block:10px 20px;box-shadow:var(--shadow);transition:background-color .45s}
+.resume h1{font-size:clamp(1.7rem,3.6vw,2.4rem);font-weight:800}
+.resume .sub{color:var(--accent);font-weight:600;margin-top:6px}
+.resume .ct{color:var(--ink-3);font-size:.9rem;margin-top:8px;display:flex;flex-wrap:wrap;gap:6px 16px}
+.resume .ct a{color:var(--ink-2)}
+.resume h2{font-family:var(--f-mono);font-size:.76rem;text-transform:uppercase;letter-spacing:.14em;color:var(--accent);font-weight:500;margin:32px 0 12px;padding-bottom:8px;border-bottom:1px solid var(--line)}
+.resume p,.resume li{color:var(--ink-2);font-size:.95rem}
+.resume ul{padding-left:18px;margin:8px 0 0;display:flex;flex-direction:column;gap:5px}
+.r-row{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-top:18px}
+.r-row b{font-size:1.02rem}
+.r-row .mono{color:var(--ink-3)}
+.r-role{color:var(--ink-2);font-size:.92rem;font-style:italic}
+.r-skill{display:grid;grid-template-columns:190px 1fr;gap:4px 16px;font-size:.93rem;margin-top:8px}
+.r-skill dt{font-weight:600;color:var(--ink)}
+.r-skill dd{margin:0;color:var(--ink-2)}
+.print-note{color:var(--ink-3);font-size:.85rem}
+
+/* ---------- responsive ---------- */
+@media (max-width:980px){
+  .hero-grid{grid-template-columns:1fr;gap:40px}
+  .profile{max-width:420px}
+  .skill-grid,.edu-grid{grid-template-columns:1fr 1fr}
+  .ach-grid{grid-template-columns:1fr 1fr}
+  .ach:nth-child(2){border-right:0}
+  .ach:nth-child(-n+2){border-bottom:1px solid var(--line)}
+  .domain,.contact{grid-template-columns:1fr}
+  .article{grid-template-columns:1fr;gap:10px}
+  .toc{position:static;flex-direction:row;flex-wrap:wrap}
+  .toc a{border-left:0;border-bottom:2px solid var(--line)}
+}
+@media (max-width:720px){
+  section{padding-block:60px}
+  .proj-grid,.skill-grid,.edu-grid,.principles,.next-grid{grid-template-columns:1fr}
+  .proj.feature{grid-template-columns:1fr}
+  .proj.feature .proj-art{border-right:0;border-bottom:1px solid var(--line);min-height:220px}
+  .stats,.facts{grid-template-columns:1fr 1fr}
+  .stat:nth-child(3),.facts div:nth-child(3){border-left:0;padding-left:0}
+  .stat:nth-child(n+3),.facts div:nth-child(n+3){border-top:1px solid var(--line)}
+  .job{grid-template-columns:1fr;gap:10px;padding:22px}
+  .job-when{flex-direction:row;align-items:center;flex-wrap:wrap;gap:10px}
+  .logo{margin-bottom:0}
+  .r-skill{grid-template-columns:1fr}
+  .r-skill dd{margin-bottom:8px}
+  .pipe-row .stage small{font-size:.66rem}
+  .node{width:40px;height:40px}
+  .track{top:20px}
+}
+@media (max-width:440px){
+  .ach-grid{grid-template-columns:1fr}
+  .ach{border-right:0;border-bottom:1px solid var(--line)}
+  .ach:last-child{border-bottom:0}
+}
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation:none!important;transition:none!important}
+  html{scroll-behavior:auto}
+}
+@media print{
+  .hdr,.mnav,.foot,.back,.no-print{display:none!important}
+  body::before{display:none}
+  .resume{box-shadow:none;border:0;padding:0}
+}
+</style>
+
+</head>
+<body>
+<header class="hdr" id="hdr">
+  <div class="wrap">
+    <a class="brand" href="#/" aria-label="Srinivas Koya — home"><span class="mk">SK</span>Srinivas<span class="dim">.</span></a>
+    <nav class="nav" id="nav" aria-label="Primary">
+      <a href="#projects">Projects</a>
+      <a href="#skills">Skills</a>
+      <a href="#domain">Domain</a>
+      <a href="#experience">Experience</a>
+      <a href="#education">Education</a>
+      <a href="#/how-i-build">How I Build</a>
+      <a href="#/resume">Resume</a>
+    </nav>
+    <div class="hdr-actions">
+      <button class="icon-btn theme-btn" id="themeBtn" type="button" aria-label="Toggle light or dark theme" title="Toggle theme">
+        <svg class="moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 1 1 9.5 4a6.5 6.5 0 0 0 10.5 10.5z"/></svg>
+        <svg class="sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>
+      </button>
+      <a class="btn btn-primary btn-sm" href="#contact">Let's Connect</a>
+      <button class="icon-btn menu-btn" id="menuBtn" type="button" aria-label="Open menu" aria-expanded="false">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
+      </button>
+    </div>
+  </div>
+</header>
+<nav class="mnav" id="mnav" aria-label="Mobile">
+  <a href="#projects">Projects</a>
+  <a href="#skills">Skills</a>
+  <a href="#domain">Domain</a>
+  <a href="#experience">Experience</a>
+  <a href="#education">Education</a>
+  <a href="#/how-i-build">How I Build</a>
+  <a href="#/resume">Resume</a>
+  <a href="#contact">Contact</a>
+</nav>
+
+<main id="app"></main>
+
+<!-- ================= HOME ================= -->
+<template id="t-home">
+<div class="view">
+  <section class="hero" id="home">
+    <div class="wrap hero-grid">
+      <div>
+        <div class="quote"><span class="status"><i></i>Open to Data Engineering roles</span></div>
+        <p class="mono" style="color:var(--ink-3)">“Reliable data is the quiet engine behind every good decision.”</p>
+        <h1>Hi, I'm <span class="nm">Srinivas Koya</span></h1>
+        <div class="roll" aria-live="polite">I build
+          <span class="roll-box"><span class="roll-list" id="roll">
+            <span>lakehouse pipelines</span>
+            <span>real-time streaming systems</span>
+            <span>Medallion architectures</span>
+            <span>data quality frameworks</span>
+            <span>analytics-ready models</span>
+            <span>lakehouse pipelines</span>
+          </span></span>
+        </div>
+        <p class="hero-copy">Data Engineer with 5+ years building data platforms for telecom, healthcare and enterprise data warehousing. I design batch and streaming pipelines on Azure Databricks, Data Factory, Microsoft Fabric and Snowflake, with Python and PySpark at the core.</p>
+        <p class="hero-copy" style="margin-top:12px">From ingesting 50+ source systems into a Medallion lakehouse to streaming 10M+ healthcare events an hour at under 5-minute latency, I build systems that are fast, governed and cost-aware.</p>
+        <div class="hero-cta">
+          <a class="btn btn-primary" href="#projects">View Projects
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
+          <a class="btn btn-ghost" href="#contact">Hire / Collaborate</a>
+          <a class="btn btn-ghost" href="#/how-i-build">How I Build</a>
+        </div>
+        <div class="stats">
+          <div class="stat"><b data-count="5" data-suffix="+">5+</b><span>Years in data engineering</span></div>
+          <div class="stat"><b data-count="500" data-suffix="M+">500M+</b><span>Records processed a day</span></div>
+          <div class="stat"><b data-count="10" data-suffix="M+/hr">10M+/hr</b><span>Streaming healthcare events</span></div>
+          <div class="stat"><b>99.9%</b><span>Pipeline uptime sustained</span></div>
+        </div>
+      </div>
+      <aside class="profile">
+        <div class="photo"><img src="data:image/jpeg;base64,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" alt="Portrait of Srinivas Koya" width="560" height="560"></div>
+        <h3>Sesha Sai Srinivas Koya</h3>
+        <p class="role">Data Engineer · Montgomery, AL</p>
+        <div class="chips"><span class="chip">Python</span><span class="chip">PySpark</span><span class="chip">Azure</span><span class="chip">Databricks</span><span class="chip">Snowflake</span><span class="chip">SQL</span></div>
+        <div class="cert">
+          <span class="seal"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="9" r="6"/><path d="M8.5 14 7 22l5-3 5 3-1.5-8"/></svg></span>
+          <div><b>Databricks Certified Data Engineer Associate</b><span>Certification</span></div>
+        </div>
+      </aside>
+    </div>
+    <div class="wrap">
+      <div class="pipe" aria-label="How data moves through the lakehouse I build">
+        <div class="pipe-top"><span class="eyebrow">Medallion flow</span><span class="mono">ADF · Auto Loader · Delta Lake · DLT · Unity Catalog</span></div>
+        <div class="pipe-row">
+          <div class="track" aria-hidden="true"><span class="pkt"></span><span class="pkt"></span><span class="pkt"></span></div>
+          <div class="stage"><div class="node">SRC</div><small><b>Sources</b>50+ systems · Kafka · Event Hubs</small></div>
+          <div class="stage"><div class="node b">BRZ</div><small><b>Bronze</b>Raw, append-only</small></div>
+          <div class="stage"><div class="node s">SLV</div><small><b>Silver</b>Cleaned · CDC · SCD2</small></div>
+          <div class="stage"><div class="node g">GLD</div><small><b>Gold</b>Star schemas · marts</small></div>
+          <div class="stage"><div class="node bi">BI</div><small><b>Serve</b>Fabric · Snowflake · Power BI</small></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="projects">
+    <div class="wrap">
+      <div class="sec-head"><span class="eyebrow">Projects</span><h2>Selected work</h2><p>Personal builds and production case studies. Open any card for the full write-up.</p></div>
+      <div class="proj-grid">
+        <a class="proj feature" href="#/p/commerce-pulse">
+          <div class="proj-art" aria-hidden="true">
+            <svg viewBox="0 0 400 320" preserveAspectRatio="xMidYMid slice">
+              <defs><pattern id="g1" width="20" height="20" patternUnits="userSpaceOnUse"><path d="M20 0H0V20" fill="none" stroke="var(--line)" stroke-width="1"/></pattern></defs>
+              <rect width="400" height="320" fill="url(#g1)"/>
+              <polyline points="20,240 60,220 100,230 140,180 180,196 220,140 260,150 300,100 340,112 380,70" fill="none" stroke="var(--accent)" stroke-width="3" stroke-linejoin="round"/>
+              <polyline points="20,240 60,220 100,230 140,180 180,196 220,140 260,150 300,100 340,112 380,70 380,320 20,320" fill="var(--accent)" opacity=".10"/>
+              <circle cx="380" cy="70" r="6" fill="var(--accent)"/>
+              <g font-family="JetBrains Mono,monospace" font-size="11" fill="var(--ink-3)"><text x="24" y="36">clickstream.events → kafka</text><text x="24" y="54">orders.events → kafka</text></g>
+              <g transform="translate(24,272)"><rect width="56" height="22" rx="5" fill="var(--bronze)" opacity=".85"/><rect x="62" width="56" height="22" rx="5" fill="var(--silver)" opacity=".85"/><rect x="124" width="56" height="22" rx="5" fill="var(--gold)" opacity=".85"/></g>
+            </svg>
+          </div>
+          <div class="proj-body">
+            <div class="proj-meta"><span class="tag">Featured · Open source</span><span class="mono">Python · SQL · YAML</span></div>
+            <h3>CommercePulse: Real-Time E-Commerce Analytics Platform</h3>
+            <p>A production-grade platform modelling a mid-size retailer: clickstream and order events stream through Kafka into Databricks, flow across Bronze/Silver/Gold Delta tables, land in Snowflake, get shaped by dbt, and surface in Tableau, with ML sentiment and purchase-propensity scoring built in.</p>
+            <div class="chips"><span class="chip">Kafka / Event Hubs</span><span class="chip">Structured Streaming</span><span class="chip">Delta Lake</span><span class="chip">Snowflake</span><span class="chip">dbt</span><span class="chip">MLflow</span><span class="chip">LightGBM</span></div>
+            <span class="proj-link">Read the case study <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
+          </div>
+        </a>
+
+        <a class="proj" href="#/p/telecom-lakehouse">
+          <div class="proj-art" aria-hidden="true">
+            <svg viewBox="0 0 400 170" preserveAspectRatio="xMidYMid slice">
+              <rect width="400" height="170" fill="url(#g1)"/>
+              <g fill="none" stroke="var(--line-2)" stroke-width="1.5"><path d="M40 40 C140 40 140 85 200 85"/><path d="M40 85 H200"/><path d="M40 130 C140 130 140 85 200 85"/><path d="M200 85 H360"/></g>
+              <g><circle cx="40" cy="40" r="7" fill="var(--ink-3)"/><circle cx="40" cy="85" r="7" fill="var(--ink-3)"/><circle cx="40" cy="130" r="7" fill="var(--ink-3)"/><rect x="186" y="71" width="28" height="28" rx="7" fill="var(--bronze)"/><rect x="256" y="71" width="28" height="28" rx="7" fill="var(--silver)"/><rect x="326" y="71" width="28" height="28" rx="7" fill="var(--gold)"/></g>
+            </svg>
+          </div>
+          <div class="proj-body">
+            <div class="proj-meta"><span class="tag">Case study · Lumen</span><span class="mono">2026 – Present</span></div>
+            <h3>Telecom Medallion Lakehouse</h3>
+            <p>50+ source systems into a governed Bronze/Silver/Gold lakehouse, 500M+ records a day, with streaming fraud analytics and Fabric DirectLake reporting.</p>
+            <div class="kpis"><div><b>−50%</b>batch runtime</div><div><b>+60%</b>query speed</div><div><b>−35%</b>infra cost</div></div>
+            <span class="proj-link">View details <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
+          </div>
+        </a>
+
+        <a class="proj" href="#/p/healthcare-streaming">
+          <div class="proj-art" aria-hidden="true">
+            <svg viewBox="0 0 400 170" preserveAspectRatio="xMidYMid slice">
+              <rect width="400" height="170" fill="url(#g1)"/>
+              <polyline points="0,95 70,95 90,95 105,45 122,140 140,70 155,95 240,95 258,95 272,55 288,130 304,80 318,95 400,95" fill="none" stroke="var(--accent)" stroke-width="2.5" stroke-linejoin="round"/>
+              <text x="20" y="30" font-family="JetBrains Mono,monospace" font-size="11" fill="var(--ink-3)">watermark = 10 min · exactly-once</text>
+            </svg>
+          </div>
+          <div class="proj-body">
+            <div class="proj-meta"><span class="tag">Case study · Accenture</span><span class="mono">2021 – 2023</span></div>
+            <h3>HIPAA Healthcare Streaming Platform</h3>
+            <p>10M+ regulated events an hour through Event Hubs and Kafka into a Delta lakehouse, with stateful exactly-once alerts and a Snowflake + dbt analytics layer.</p>
+            <div class="kpis"><div><b>2×</b>throughput</div><div><b>99.9%</b>uptime</div><div><b>−50%</b>storage cost</div></div>
+            <span class="proj-link">View details <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
+          </div>
+        </a>
+
+        <a class="proj" href="#/p/yelp-sentiment">
+          <div class="proj-art" aria-hidden="true">
+            <svg viewBox="0 0 400 170" preserveAspectRatio="xMidYMid slice">
+              <rect width="400" height="170" fill="url(#g1)"/>
+              <g><rect x="40" y="110" width="34" height="40" rx="4" fill="var(--line-2)"/><rect x="86" y="92" width="34" height="58" rx="4" fill="var(--line-2)"/><rect x="132" y="70" width="34" height="80" rx="4" fill="var(--line-2)"/><rect x="178" y="48" width="34" height="102" rx="4" fill="var(--accent)" opacity=".75"/><rect x="224" y="30" width="34" height="120" rx="4" fill="var(--accent)"/></g>
+              <text x="280" y="50" font-family="Bricolage Grotesque,sans-serif" font-weight="800" font-size="34" fill="var(--ink)">88%+</text>
+              <text x="282" y="70" font-family="JetBrains Mono,monospace" font-size="11" fill="var(--ink-3)">accuracy</text>
+            </svg>
+          </div>
+          <div class="proj-body">
+            <div class="proj-meta"><span class="tag">Academic · NLP</span><span class="mono">2024 – 2025</span></div>
+            <h3>NLP Sentiment Analysis on Yelp Reviews</h3>
+            <p>A Pandas pipeline over tens of thousands of reviews: tokenization and TF-IDF features feeding classifiers that reached 88%+ accuracy.</p>
+            <div class="chips"><span class="chip">Python</span><span class="chip">Pandas</span><span class="chip">TF-IDF</span><span class="chip">scikit-learn</span></div>
+            <span class="proj-link">View details <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
+          </div>
+        </a>
+
+        <a class="proj" href="#/p/aws-attendance">
+          <div class="proj-art" aria-hidden="true">
+            <svg viewBox="0 0 400 170" preserveAspectRatio="xMidYMid slice">
+              <rect width="400" height="170" fill="url(#g1)"/>
+              <g fill="none" stroke="var(--accent)" stroke-width="2.5" stroke-linecap="round"><path d="M40 50 V35 H55"/><path d="M345 35 H360 V50"/><path d="M40 120 V135 H55"/><path d="M345 135 H360 V120"/></g>
+              <circle cx="200" cy="72" r="22" fill="none" stroke="var(--ink-3)" stroke-width="2"/>
+              <path d="M160 132 C165 104 235 104 240 132" fill="none" stroke="var(--ink-3)" stroke-width="2"/>
+              <text x="252" y="80" font-family="JetBrains Mono,monospace" font-size="11" fill="var(--accent)">match: 0.98</text>
+            </svg>
+          </div>
+          <div class="proj-body">
+            <div class="proj-meta"><span class="tag">Academic · Cloud</span><span class="mono">2020 – 2021</span></div>
+            <h3>AWS Serverless Attendance System</h3>
+            <p>A serverless backend with Lambda, S3, Rekognition and DynamoDB, a Python facial-matching pipeline, CloudWatch monitoring and automated CI/CD.</p>
+            <div class="chips"><span class="chip">AWS Lambda</span><span class="chip">Rekognition</span><span class="chip">DynamoDB</span><span class="chip">S3</span></div>
+            <span class="proj-link">View details <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
+          </div>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <section id="skills">
+    <div class="wrap">
+      <div class="sec-head"><span class="eyebrow">Skills</span><h2>Core capabilities</h2><p>The stack I use to move data from source systems to the dashboards people rely on.</p></div>
+      <div class="skill-grid">
+        <div class="skill"><h3><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m8 7-5 5 5 5M16 7l5 5-5 5"/></svg></span>Languages</h3>
+          <ul><li>Python</li><li>PySpark</li><li>SQL</li><li>Spark SQL</li><li>T-SQL</li><li>PL/SQL</li><li>Bash / Shell</li></ul></div>
+        <div class="skill"><h3><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17.5 19a4.5 4.5 0 1 0-1.4-8.8A6 6 0 0 0 4.5 12 3.5 3.5 0 0 0 6 19z"/></svg></span>Azure &amp; Microsoft Fabric</h3>
+          <ul><li>Azure Data Factory</li><li>Azure Databricks</li><li>Synapse Analytics</li><li>ADLS Gen2</li><li>Azure SQL Database</li><li>Event Hubs</li><li>Azure Functions</li><li>Key Vault</li><li>Fabric OneLake</li><li>Fabric Lakehouse &amp; Warehouse</li><li>DirectLake</li></ul></div>
+        <div class="skill"><h3><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m12 3 9 5-9 5-9-5 9-5z"/><path d="m3 13 9 5 9-5"/></svg></span>Databricks &amp; Lakehouse</h3>
+          <ul><li>Delta Lake</li><li>Lakeflow Declarative Pipelines (DLT)</li><li>Unity Catalog</li><li>Auto Loader</li><li>Structured Streaming</li><li>Databricks SQL</li><li>Medallion Architecture</li></ul></div>
+        <div class="skill"><h3><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="6" cy="6" r="2.5"/><circle cx="18" cy="18" r="2.5"/><path d="M8.5 6H14a4 4 0 0 1 4 4v5.5"/></svg></span>Engineering &amp; Modeling</h3>
+          <ul><li>Apache Spark</li><li>Apache Kafka</li><li>Apache Airflow</li><li>dbt</li><li>SSIS</li><li>Informatica PowerCenter</li><li>ETL / ELT</li><li>CDC</li><li>Kimball modeling</li><li>Star &amp; snowflake schemas</li><li>SCD Type 1/2</li></ul></div>
+        <div class="skill"><h3><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><ellipse cx="12" cy="5.5" rx="8" ry="2.8"/><path d="M4 5.5v13c0 1.5 3.6 2.8 8 2.8s8-1.3 8-2.8v-13M4 12c0 1.5 3.6 2.8 8 2.8s8-1.3 8-2.8"/></svg></span>Databases &amp; Formats</h3>
+          <ul><li>Snowflake</li><li>SQL Server</li><li>Oracle</li><li>Teradata</li><li>Netezza</li><li>PostgreSQL</li><li>MySQL</li><li>Delta</li><li>Parquet</li><li>Avro</li><li>JSON · CSV</li></ul></div>
+        <div class="skill"><h3><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 12l2 2 4-4"/><path d="M12 3 4 6v6c0 5 3.5 8 8 9 4.5-1 8-4 8-9V6z"/></svg></span>DevOps, Quality &amp; BI</h3>
+          <ul><li>Azure DevOps</li><li>Git</li><li>CI/CD</li><li>Terraform</li><li>Great Expectations</li><li>dbt tests</li><li>Azure Monitor</li><li>Log Analytics</li><li>Power BI</li><li>DAX</li><li>SSRS</li></ul></div>
+      </div>
+    </div>
+  </section>
+
+  <section id="domain">
+    <div class="wrap domain">
+      <div>
+        <div class="sec-head" style="margin-bottom:22px"><span class="eyebrow">Domain</span><h2>Lakehouse &amp; data warehousing for regulated, high-volume industries</h2></div>
+        <p>I work on the part of a data platform most people never see: getting data out of dozens of source systems, keeping its history correct, and serving it in a shape analysts can trust.</p>
+        <p>My background runs from classic SSIS, Informatica and T-SQL warehousing to modern lakehouses on Databricks, Fabric and Snowflake, so I'm comfortable modernising legacy estates as well as building new ones.</p>
+        <div class="inds"><span class="chip">Telecom</span><span class="chip">Healthcare · HIPAA</span><span class="chip">Enterprise DW</span><span class="chip">Fraud analytics</span><span class="chip">E-commerce</span></div>
+      </div>
+      <div class="medal">
+        <div class="tier b"><span class="t">Bronze</span><p>Raw landing with Auto Loader and ADF: schema-tracked, append-only, replayable.</p></div>
+        <div class="tier s"><span class="t">Silver</span><p>Cleaned and conformed with Delta MERGE, CDC and SCD Type 2 history; validated with Great Expectations.</p></div>
+        <div class="tier g"><span class="t">Gold</span><p>Kimball star schemas and marts, tuned for Synapse, Snowflake and Fabric.</p></div>
+        <div class="tier c"><span class="t">Serve</span><p>Power BI DirectLake semantic models for 200+ business users.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section id="experience">
+    <div class="wrap">
+      <div class="sec-head"><span class="eyebrow">Experience</span><h2>5+ years across telecom, healthcare &amp; enterprise data</h2></div>
+      <div class="timeline">
+        <article class="job">
+          <div class="job-when"><span class="logo" style="background:#0075c9">Lu</span><span class="mono">Jan 2026 – Present</span><span class="now">Current</span></div>
+          <div>
+            <h3>Data Engineer (Contract)</h3>
+            <p class="org">Lumen Technologies · Remote</p>
+            <ul>
+              <li>Build ADF and Auto Loader pipelines ingesting 50+ source systems into a Medallion lakehouse on ADLS Gen2 with Delta Lake and Lakeflow Declarative Pipelines.</li>
+              <li>Develop PySpark transformations on Azure Databricks processing 500M+ records a day, cutting batch run time by 50% through Spark tuning.</li>
+              <li>Stream transactions from Event Hubs and Kafka with Structured Streaming for real-time fraud-detection analytics.</li>
+            </ul>
+            <details class="more"><summary>More <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg></summary>
+              <ul>
+                <li>Build CDC pipelines with Delta Lake MERGE to maintain SCD Type 2 history across Silver and Gold.</li>
+                <li>Deliver Gold data through Microsoft Fabric (OneLake, Lakehouse, Data Warehouse) and Power BI DirectLake for 200+ business users.</li>
+                <li>Tune Azure Synapse queries and data distribution, improving query performance by 60%.</li>
+                <li>Govern data with Unity Catalog; automate deployments with Azure DevOps CI/CD and Terraform, cutting infrastructure costs by 35%.</li>
+              </ul></details>
+          </div>
+        </article>
+        <article class="job">
+          <div class="job-when"><span class="logo" style="background:#a100ff">Ac</span><span class="mono">Jul 2021 – Nov 2023</span></div>
+          <div>
+            <h3>Associate Software Engineer, Data Engineering</h3>
+            <p class="org">Accenture · Hyderabad, India</p>
+            <ul>
+              <li>Ingested 10M+ HIPAA-regulated healthcare events an hour through Event Hubs and Kafka into a Medallion Delta lakehouse using PySpark on Databricks.</li>
+              <li>Engineered Structured Streaming jobs with watermarking and exactly-once stateful aggregations for real-time alerts.</li>
+              <li>Doubled streaming throughput, sustained 99.9% uptime, and cut storage costs by 50% with Delta compaction and archive tiers.</li>
+            </ul>
+            <details class="more"><summary>More <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg></summary>
+              <ul>
+                <li>Started on SQL and ETL for the healthcare warehouse, writing T-SQL and ADF load pipelines, then moved into Azure streaming and lakehouse work.</li>
+                <li>Designed Kimball star schemas with SCD Type 2 history, served through Power BI.</li>
+                <li>Created metadata-driven ADF pipelines (Mapping Data Flows, Copy Activity, tumbling-window triggers) for self-service source onboarding.</li>
+                <li>Implemented CDC from Azure SQL Database and MySQL with change tracking at under 5-minute latency.</li>
+                <li>Loaded Gold data into Snowflake via the Spark connector and built dbt models for analytics.</li>
+                <li>Built a Python data quality framework with Great Expectations and dbt tests.</li>
+              </ul></details>
+          </div>
+        </article>
+        <article class="job">
+          <div class="job-when"><span class="logo" style="background:#1a4ca1">Co</span><span class="mono">Jul 2019 – Jun 2021</span></div>
+          <div>
+            <h3>SQL Developer</h3>
+            <p class="org">Cognizant Technology Solutions · Hyderabad, India</p>
+            <ul>
+              <li>Built SSIS and Informatica PowerCenter ETL loading Oracle, DB2, flat-file and XML sources into SQL Server, Teradata and Netezza, with pushdown optimization.</li>
+              <li>Designed Kimball star and snowflake schemas in SQLDBM with SCD Type 1/2 history.</li>
+              <li>Tuned complex T-SQL and PL/SQL procedures with indexing, plan analysis and partitioning.</li>
+            </ul>
+            <details class="more"><summary>More <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg></summary>
+              <ul>
+                <li>Wrote Python and SQL data quality, validation and profiling routines; documented source-to-target mappings, lineage and data dictionaries.</li>
+                <li>Built departmental data marts and Power BI / SSRS reports with DAX; automated nightly batches with Python and shell.</li>
+              </ul></details>
+          </div>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section id="education">
+    <div class="wrap">
+      <div class="sec-head"><span class="eyebrow">Education &amp; Certification</span><h2>Academic background</h2></div>
+      <div class="edu-grid">
+        <div class="edu"><span class="deg">M.S.</span><h3>Computer Science</h3><p>Auburn University at Montgomery<br>Montgomery, AL</p><span class="mono">Jan 2024 – Dec 2025</span></div>
+        <div class="edu"><span class="deg">B.Tech</span><h3>Computer Science</h3><p>Amity University<br>Lucknow, India</p><span class="mono">Jul 2015 – May 2019</span></div>
+        <div class="edu"><span class="deg" style="color:var(--gold)">Cert.</span><h3>Databricks Certified Data Engineer Associate</h3><p>Databricks</p><span class="mono">Lakehouse · Delta · Spark</span></div>
+      </div>
+    </div>
+  </section>
+
+  <section id="achievements">
+    <div class="wrap">
+      <div class="sec-head"><span class="eyebrow">Impact</span><h2>Results worth measuring</h2><p>Outcomes from production platforms, not benchmarks.</p></div>
+      <div class="ach-grid">
+        <div class="ach"><b>2×</b><span>Streaming throughput via checkpoint and shuffle tuning</span><small>Accenture</small></div>
+        <div class="ach"><b>−50%</b><span>Batch runtime on 500M+ daily records</span><small>Lumen</small></div>
+        <div class="ach"><b>+60%</b><span>Synapse query performance from distribution tuning</span><small>Lumen</small></div>
+        <div class="ach"><b>−35%</b><span>Infrastructure cost with Terraform and CI/CD</span><small>Lumen</small></div>
+      </div>
+    </div>
+  </section>
+
+  <section id="contact">
+    <div class="wrap">
+      <div class="contact">
+        <div>
+          <span class="eyebrow" style="color:color-mix(in srgb,var(--bg) 70%,transparent)">Contact</span>
+          <h2 style="margin-top:14px">Let's build data platforms people can trust.</h2>
+          <p>Open to Data Engineering roles and collaborations across Azure, Databricks and Snowflake. The fastest way to reach me is email.</p>
+        </div>
+        <div class="clinks">
+          <a class="clink" href="mailto:saisrinivaskoya21@gmail.com?subject=Hi%20Srinivas%2C%20writing%20from%20your%20portfolio"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/></svg><span><small>Email</small><b>saisrinivaskoya21@gmail.com</b></span><svg class="arr" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M7 17 17 7M9 7h8v8"/></svg></a>
+          <a class="clink" href="https://www.linkedin.com/in/sesha-sai-srinivas-koya-51761b1a0" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M4.98 3.5a2.5 2.5 0 1 1 0 5 2.5 2.5 0 0 1 0-5zM3 9.5h4V21H3zM9.5 9.5h3.8v1.6h.05c.53-1 1.83-2.05 3.77-2.05 4.03 0 4.78 2.65 4.78 6.1V21h-4v-5.1c0-1.22-.02-2.78-1.7-2.78-1.7 0-1.95 1.32-1.95 2.7V21h-4z"/></svg><span><small>LinkedIn</small><b>sesha-sai-srinivas-koya</b></span><svg class="arr" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M7 17 17 7M9 7h8v8"/></svg></a>
+          <a class="clink" href="https://github.com/SrinivasKoya21" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2a10 10 0 0 0-3.16 19.49c.5.09.68-.22.68-.48v-1.7c-2.78.6-3.37-1.34-3.37-1.34-.45-1.16-1.11-1.47-1.11-1.47-.91-.62.07-.61.07-.61 1 .07 1.53 1.03 1.53 1.03.9 1.52 2.34 1.08 2.91.83.09-.65.35-1.09.63-1.34-2.22-.25-4.55-1.11-4.55-4.94 0-1.09.39-1.98 1.03-2.68-.1-.25-.45-1.27.1-2.64 0 0 .84-.27 2.75 1.02a9.6 9.6 0 0 1 5 0c1.91-1.29 2.75-1.02 2.75-1.02.55 1.37.2 2.39.1 2.64.64.7 1.03 1.59 1.03 2.68 0 3.84-2.34 4.68-4.57 4.93.36.31.68.92.68 1.85V21c0 .27.18.58.69.48A10 10 0 0 0 12 2z"/></svg><span><small>GitHub</small><b>SrinivasKoya21</b></span><svg class="arr" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M7 17 17 7M9 7h8v8"/></svg></a>
+          <a class="clink" href="#/resume"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5M9 13h6M9 17h6"/></svg><span><small>Resume</small><b>View full resume</b></span><svg class="arr" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>
+</template>
+
+<!-- ================= HOW I BUILD ================= -->
+<template id="t-how-i-build">
+<div class="view wrap">
+  <div class="page-hero">
+    <a class="back" href="#/"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M11 18l-6-6 6-6"/></svg>Back to portfolio</a>
+    <span class="eyebrow">How I Build</span>
+    <h1>Six principles behind every pipeline I ship</h1>
+    <p class="lede">The habits I've carried from SSIS warehouses to Databricks lakehouses. Each one is tied to something I've actually delivered.</p>
+  </div>
+  <div class="principles">
+    <div class="pr"><span class="mono">01 · Replayable</span><h3>Land raw, then refine</h3><p>Bronze stays append-only and schema-tracked so any downstream layer can be rebuilt from source. Bad logic becomes a re-run, not a data-loss incident.</p><p class="ev"><b>In practice:</b> Auto Loader + ADF into a Bronze/Silver/Gold lakehouse for 50+ sources at Lumen.</p></div>
+    <div class="pr"><span class="mono">02 · History</span><h3>Never overwrite the past</h3><p>Dimensions keep their history with SCD Type 2, driven by CDC and Delta MERGE, so a report from last quarter still reconciles today.</p><p class="ev"><b>In practice:</b> CDC from Azure SQL and MySQL at under 5-minute latency; SCD2 across Silver and Gold.</p></div>
+    <div class="pr"><span class="mono">03 · Trust</span><h3>Test the data, not only the code</h3><p>Expectations on nulls, ranges, uniqueness and freshness run in the pipeline, so bad batches are stopped before a dashboard shows them.</p><p class="ev"><b>In practice:</b> A Python quality framework on Great Expectations and dbt tests.</p></div>
+    <div class="pr"><span class="mono">04 · Performance</span><h3>Measure, then tune</h3><p>Partitioning, shuffle sizing, checkpointing and distribution keys decide most of a job's cost. I profile first and change one thing at a time.</p><p class="ev"><b>In practice:</b> 50% faster batch, 2× streaming throughput, 60% faster Synapse queries.</p></div>
+    <div class="pr"><span class="mono">05 · Cost</span><h3>Treat the cloud bill as a metric</h3><p>Compaction, archive tiers and infrastructure-as-code keep platforms lean without trading away reliability.</p><p class="ev"><b>In practice:</b> 50% lower storage cost with Delta compaction; 35% lower infra cost with Terraform.</p></div>
+    <div class="pr"><span class="mono">06 · Operability</span><h3>Built to be run, not just built</h3><p>Governed with Unity Catalog, deployed through CI/CD, watched by alerts. The pipeline should tell you it's unhealthy before a user does.</p><p class="ev"><b>In practice:</b> 99.9% uptime with Azure Monitor and Log Analytics alerting.</p></div>
+  </div>
+  <div class="callout"><p><strong>What I'm exploring now:</strong> streaming + ML on the lakehouse. CommercePulse puts sentiment and purchase-propensity models (HuggingFace, LightGBM, MLflow) directly on top of a real-time Medallion pipeline.</p></div>
+  <div class="next-grid">
+    <a class="next" href="#/p/commerce-pulse"><small>Featured project</small><b>CommercePulse case study →</b></a>
+    <a class="next" href="#/resume"><small>Full history</small><b>View resume →</b></a>
+  </div>
+</div>
+</template>
+
+<!-- ================= RESUME ================= -->
+<template id="t-resume">
+<div class="view wrap">
+  <div class="page-hero" style="padding-bottom:10px">
+    <a class="back" href="#/"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M11 18l-6-6 6-6"/></svg>Back to portfolio</a>
+    <div style="display:flex;justify-content:space-between;align-items:flex-end;gap:16px;flex-wrap:wrap" class="no-print">
+      <div><span class="eyebrow">Resume</span><h1 style="font-size:clamp(2rem,4vw,3rem)">Full resume</h1></div>
+      <button class="btn btn-ghost" type="button" id="printBtn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9V3h12v6M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="7"/></svg>Print / Save as PDF</button>
+    </div>
+  </div>
+  <article class="resume">
+    <h1>Sesha Sai Srinivas Koya</h1>
+    <p class="sub">Data Engineer | Python | PySpark | Azure | Databricks | Snowflake | SQL</p>
+    <p class="ct"><span>Montgomery, AL</span><a href="mailto:saisrinivaskoya21@gmail.com">saisrinivaskoya21@gmail.com</a><a href="https://www.linkedin.com/in/sesha-sai-srinivas-koya-51761b1a0" target="_blank" rel="noopener">LinkedIn</a><a href="https://github.com/SrinivasKoya21" target="_blank" rel="noopener">GitHub</a></p>
+
+    <h2>Professional Summary</h2>
+    <p>Data Engineer with 5+ years of experience building data platforms for telecom, healthcare, and enterprise data warehousing, with Python and PySpark as core skills. Builds batch and streaming pipelines on Azure Databricks, Azure Data Factory, Microsoft Fabric, and Snowflake, from ingesting 50+ source systems into a Medallion lakehouse to streaming 10M+ healthcare events an hour with under 5-minute latency. Doubled streaming throughput, sustained 99.9% pipeline uptime, and cut storage costs by 50%, building on a foundation in SSIS, Informatica, and T-SQL data warehousing. Experienced in dimensional modeling, CDC and SCD Type 2, data quality, CI/CD, and HIPAA-compliant delivery in Agile/Scrum teams.</p>
+
+    <h2>Technical Skills</h2>
+    <dl class="r-skill">
+      <dt>Languages</dt><dd>Python, PySpark, SQL, Spark SQL, T-SQL, PL/SQL, Bash/Shell</dd>
+      <dt>Azure &amp; Microsoft Fabric</dt><dd>Azure Data Factory (ADF), Azure Databricks, Azure Synapse Analytics, ADLS Gen2, Azure SQL Database, Azure Event Hubs, Azure Functions, Azure Key Vault, Microsoft Fabric (OneLake, Lakehouse, Data Warehouse, Data Pipelines, DirectLake)</dd>
+      <dt>Databricks &amp; Lakehouse</dt><dd>Delta Lake, Lakeflow Declarative Pipelines (DLT), Unity Catalog, Auto Loader, Structured Streaming, Databricks SQL, Medallion Architecture</dd>
+      <dt>Engineering &amp; Modeling</dt><dd>Apache Spark, Apache Kafka, Apache Airflow, dbt, SSIS, Informatica PowerCenter, ETL/ELT, CDC, Kimball dimensional modeling, star and snowflake schemas, SCD Type 1/2</dd>
+      <dt>Databases &amp; Formats</dt><dd>Snowflake, SQL Server, Oracle, Teradata, Netezza, PostgreSQL, MySQL; Delta, Parquet, Avro, JSON, CSV</dd>
+      <dt>DevOps, Quality &amp; BI</dt><dd>Azure DevOps, Git, CI/CD, Terraform, Great Expectations, dbt tests, Azure Monitor, Log Analytics, Power BI, DAX, SSRS</dd>
+    </dl>
+
+    <h2>Certifications</h2>
+    <ul><li>Databricks Certified Data Engineer Associate</li></ul>
+
+    <h2>Professional Experience</h2>
+    <div class="r-row"><b>Lumen Technologies</b><span class="mono">Jan 2026 – Present</span></div>
+    <p class="r-role">Data Engineer (Contract) | Remote</p>
+    <ul>
+      <li>Build Azure Data Factory and Auto Loader pipelines ingesting 50+ source systems into a Medallion (Bronze/Silver/Gold) lakehouse on ADLS Gen2 using Delta Lake and Lakeflow Declarative Pipelines (DLT).</li>
+      <li>Develop Python and PySpark transformations on Azure Databricks processing 500M+ records a day, cutting batch run time by 50% through Spark performance tuning.</li>
+      <li>Stream transactions from Azure Event Hubs and Apache Kafka with PySpark Structured Streaming for real-time fraud-detection analytics.</li>
+      <li>Build CDC pipelines with Delta Lake MERGE to maintain SCD Type 2 dimension history across Silver and Gold layers.</li>
+      <li>Deliver curated Gold-layer data through Microsoft Fabric (OneLake, Lakehouse, and Data Warehouse) and Power BI DirectLake semantic models for 200+ business users.</li>
+      <li>Tune Azure Synapse Analytics warehouse queries and data distribution, improving query performance by 60%.</li>
+      <li>Govern data with Unity Catalog and automate deployments with Azure DevOps CI/CD and Terraform, cutting infrastructure costs by 35%.</li>
+    </ul>
+    <div class="r-row"><b>Accenture</b><span class="mono">Jul 2021 – Nov 2023</span></div>
+    <p class="r-role">Associate Software Engineer – Data Engineering | Hyderabad, India</p>
+    <ul>
+      <li>Started on SQL and ETL development for the healthcare data warehouse, writing T-SQL transformations and ADF load pipelines, then moved into Azure data engineering, building streaming and lakehouse pipelines in Python and PySpark.</li>
+      <li>Designed Kimball star schema models with SCD Type 2 history for the healthcare data warehouse, served through Power BI.</li>
+      <li>Created metadata-driven ADF pipelines with Mapping Data Flows, Copy Activity, and tumbling-window triggers, enabling self-service onboarding of new data sources.</li>
+      <li>Implemented change data capture (CDC) from Azure SQL Database and MySQL sources with change tracking, achieving under 5-minute data latency.</li>
+      <li>Ingested 10M+ HIPAA-regulated healthcare events per hour through Azure Event Hubs and Apache Kafka into a Medallion Architecture Delta Lake lakehouse on ADLS Gen2, using Python and PySpark on Azure Databricks.</li>
+      <li>Engineered PySpark Structured Streaming jobs with watermarking and exactly-once stateful aggregations for real-time alerts.</li>
+      <li>Loaded curated Gold-layer data into Snowflake with PySpark and the Snowflake Spark connector, and built dbt models on Snowflake for downstream analytics and reporting.</li>
+      <li>Built a Python data quality framework with Great Expectations and dbt tests for automated validation and profiling.</li>
+      <li>Doubled streaming throughput through checkpoint and shuffle tuning and sustained 99.9% uptime with Azure Monitor and Log Analytics alerts; cut storage costs by 50% with Delta Lake compaction and archive tiers.</li>
+    </ul>
+    <div class="r-row"><b>Cognizant Technology Solutions</b><span class="mono">Jul 2019 – Jun 2021</span></div>
+    <p class="r-role">SQL Developer | Hyderabad, India</p>
+    <ul>
+      <li>Built SSIS and Informatica PowerCenter ETL packages loading Oracle, DB2, flat-file, and XML sources into SQL Server, Teradata, and Netezza data warehouses, using pushdown optimization for faster loads.</li>
+      <li>Designed star and snowflake schema models (Kimball) in SQLDBM with fact and dimension tables and SCD Type 1/2 history.</li>
+      <li>Developed and tuned complex T-SQL and PL/SQL stored procedures with indexing, query plan analysis, and table partitioning for OLTP and OLAP workloads.</li>
+      <li>Wrote Python and SQL data quality, validation, and profiling routines, and documented source-to-target mappings, data lineage, and data dictionaries.</li>
+      <li>Built departmental data marts and Power BI and SSRS reports with DAX, and automated nightly batch jobs with Python and shell scripts.</li>
+    </ul>
+
+    <h2>Projects</h2>
+    <div class="r-row"><b>CommercePulse: Real-Time E-Commerce Analytics Platform</b><a class="mono" href="https://github.com/SrinivasKoya21/commerce-pulse" target="_blank" rel="noopener">GitHub ↗</a></div>
+    <ul><li>Kafka / Event Hubs streaming into Databricks Structured Streaming and a Delta Lake Medallion lakehouse, exported to Snowflake and modelled with dbt, with HuggingFace sentiment and MLflow-tracked LightGBM propensity models, Tableau dashboards and GitHub Actions CI/CD.</li></ul>
+    <div class="r-row"><b>NLP Sentiment Analysis on Yelp Reviews</b><span class="mono">2024 – 2025</span></div>
+    <ul><li>Built a Python (Pandas) pipeline processing tens of thousands of Yelp reviews with tokenization and TF-IDF features, feeding classifiers that reached 88%+ accuracy.</li></ul>
+    <div class="r-row"><b>AWS Serverless Attendance System</b><span class="mono">2020 – 2021</span></div>
+    <ul><li>Built a serverless AWS backend with Lambda, S3, Rekognition, and DynamoDB, including a Python facial-matching pipeline, CloudWatch monitoring, and automated CI/CD deployment.</li></ul>
+
+    <h2>Education</h2>
+    <div class="r-row"><b>Auburn University at Montgomery</b><span class="mono">Jan 2024 – Dec 2025</span></div>
+    <p class="r-role">Master of Science in Computer Science | Montgomery, AL</p>
+    <div class="r-row"><b>Amity University</b><span class="mono">Jul 2015 – May 2019</span></div>
+    <p class="r-role">Bachelor of Technology in Computer Science | Lucknow, India</p>
+  </article>
+</div>
+</template>
+
+<script>
+/* ---------- project detail pages (data) ---------- */
+const ARROW='<svg class="farr" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>';
+function flow(steps){return '<div class="flow"><div class="flow-inner">'+steps.map(s=>'<div class="fstep"><span class="mono" style="color:'+(s.c||'var(--ink-3)')+'">'+s.k+'</span><b>'+s.t+'</b>'+s.d+'</div>').join(ARROW)+'</div></div>';}
+const PROJECTS={
+ "commerce-pulse":{
+  tag:"Featured · Open source", title:"CommercePulse: real-time e-commerce analytics",
+  lede:"A production-grade analytics platform for a mid-size online retailer: real-time behaviour insight, reliable batch reporting and AI-driven decisions, built end to end and designed to run on an Azure free trial.",
+  links:[["View on GitHub","https://github.com/SrinivasKoya21/commerce-pulse"]],
+  facts:[["Type","Personal · open source"],["Role","Sole engineer"],["Languages","Python · SQL · YAML"],["Cloud","Azure + Snowflake"]],
+  body:`
+  <h2 id="s-problem">The problem</h2>
+  <p>Retail teams need three things from their data at once: what shoppers are doing <strong>right now</strong>, trustworthy <strong>daily numbers</strong> for revenue and funnels, and <strong>predictions</strong> they can act on. CommercePulse puts all three on one lakehouse instead of three disconnected tools.</p>
+  <h2 id="s-arch">Architecture</h2>
+  ${flow([{k:'Ingest',t:'Kafka / Event Hubs',d:'Clickstream and order events'},{k:'Bronze',t:'Raw Delta',d:'Structured Streaming append',c:'var(--bronze)'},{k:'Silver',t:'Cleaned Delta',d:'Dedup, typed, validated',c:'var(--silver)'},{k:'Gold',t:'Metrics Delta',d:'Revenue, funnels, products',c:'var(--gold)'},{k:'Warehouse',t:'Snowflake + dbt',d:'Modelled marts'},{k:'Serve',t:'Tableau',d:'Dashboards',c:'var(--accent)'}])}
+  <p>Events are generated, pushed through Kafka (Azure Event Hubs Kafka API), and consumed by PySpark Structured Streaming on Databricks into a Bronze/Silver/Gold Delta Lake. Gold tables are exported to Snowflake through the Spark connector, refined with dbt Core, and surfaced in Tableau.</p>
+  <h2 id="s-features">What it does</h2>
+  <ul>
+   <li><strong>Real-time streaming:</strong> clickstream and order events through Kafka into Delta.</li>
+   <li><strong>Batch analytics:</strong> daily revenue, conversion funnels and product metrics.</li>
+   <li><strong>AI / ML:</strong> HuggingFace transformer sentiment on product reviews, and an MLflow-tracked LightGBM purchase-propensity model.</li>
+   <li><strong>Data quality:</strong> unit-tested transformations and automated data validations.</li>
+   <li><strong>CI/CD:</strong> GitHub Actions for tests and deployment, with Databricks Asset Bundles.</li>
+  </ul>
+  <h2 id="s-stack">Stack</h2>
+  <p>Azure · Event Hubs (Kafka API) · Apache Kafka · Databricks · PySpark Structured Streaming · Delta Lake · Snowflake · dbt Core · HuggingFace · MLflow · LightGBM · Tableau · GitHub Actions · Databricks Asset Bundles.</p>
+  <h2 id="s-decisions">Design decisions</h2>
+  <ul>
+   <li><strong>Cost-conscious by design:</strong> configured to fit Azure's $200 free trial, with infrastructure-as-code scripts to provision and tear everything down.</li>
+   <li><strong>One lakehouse, two speeds:</strong> the same Delta tables serve streaming and batch, so real-time and daily numbers agree.</li>
+   <li><strong>ML next to the data:</strong> models read Gold tables directly and are tracked in MLflow, so features and predictions stay reproducible.</li>
+  </ul>
+  <div class="callout"><p>The repository includes full documentation and an implementation guide for reproducing the platform from scratch.</p></div>`,
+  toc:[["s-problem","The problem"],["s-arch","Architecture"],["s-features","What it does"],["s-stack","Stack"],["s-decisions","Design decisions"]]
+ },
+ "telecom-lakehouse":{
+  tag:"Case study · Lumen Technologies", title:"Telecom Medallion lakehouse",
+  lede:"Ingesting 50+ source systems into a governed Bronze/Silver/Gold lakehouse on Azure, processing 500M+ records a day and serving 200+ business users through Microsoft Fabric.",
+  links:[],
+  facts:[["Company","Lumen Technologies"],["Role","Data Engineer (Contract)"],["Period","Jan 2026 – Present"],["Scale","500M+ records / day"]],
+  body:`
+  <h2 id="s-scope">Scope</h2>
+  <p>Build and run the ingestion, transformation and serving layers of a telecom data platform, spanning batch sources, streaming transactions and enterprise reporting.</p>
+  <h2 id="s-arch">Architecture</h2>
+  ${flow([{k:'Sources',t:'50+ systems',d:'ADF, Auto Loader, Event Hubs, Kafka'},{k:'Bronze',t:'ADLS Gen2 · Delta',d:'Lakeflow Declarative Pipelines',c:'var(--bronze)'},{k:'Silver',t:'CDC · SCD2',d:'Delta MERGE',c:'var(--silver)'},{k:'Gold',t:'Curated',d:'Synapse · Fabric Warehouse',c:'var(--gold)'},{k:'Serve',t:'Power BI',d:'DirectLake · 200+ users',c:'var(--accent)'}])}
+  <h2 id="s-work">What I built</h2>
+  <ul>
+   <li>ADF and Auto Loader pipelines landing 50+ sources in a Medallion lakehouse with Delta Lake and Lakeflow Declarative Pipelines (DLT).</li>
+   <li>PySpark transformations on Azure Databricks processing 500M+ records a day.</li>
+   <li>Structured Streaming from Event Hubs and Kafka for real-time fraud-detection analytics.</li>
+   <li>CDC pipelines with Delta MERGE maintaining SCD Type 2 history across Silver and Gold.</li>
+   <li>Gold delivery through Fabric OneLake, Lakehouse and Data Warehouse, with DirectLake semantic models.</li>
+   <li>Unity Catalog governance; Azure DevOps CI/CD and Terraform for deployments.</li>
+  </ul>
+  <h2 id="s-results">Results</h2>
+  <ul><li><strong>50% faster</strong> batch runs through Spark performance tuning.</li><li><strong>60% faster</strong> Synapse queries via distribution and query tuning.</li><li><strong>35% lower</strong> infrastructure cost with CI/CD and Terraform.</li></ul>`,
+  toc:[["s-scope","Scope"],["s-arch","Architecture"],["s-work","What I built"],["s-results","Results"]]
+ },
+ "healthcare-streaming":{
+  tag:"Case study · Accenture", title:"HIPAA healthcare streaming platform",
+  lede:"Moving 10M+ regulated healthcare events an hour into a Delta lakehouse, with exactly-once real-time alerts and a Snowflake analytics layer.",
+  links:[],
+  facts:[["Company","Accenture"],["Role","Associate SWE, Data Eng."],["Period","Jul 2021 – Nov 2023"],["Scale","10M+ events / hour"]],
+  body:`
+  <h2 id="s-scope">Scope</h2>
+  <p>I started on SQL and ETL for the healthcare data warehouse, writing T-SQL transformations and ADF load pipelines, then moved into Azure streaming and lakehouse engineering in Python and PySpark.</p>
+  <h2 id="s-arch">Architecture</h2>
+  ${flow([{k:'Ingest',t:'Event Hubs · Kafka',d:'10M+ events / hr'},{k:'Bronze',t:'Delta on ADLS',d:'HIPAA-compliant landing',c:'var(--bronze)'},{k:'Silver',t:'Streaming',d:'Watermarks, exactly-once',c:'var(--silver)'},{k:'Gold',t:'Star schema',d:'SCD2 history',c:'var(--gold)'},{k:'Analytics',t:'Snowflake + dbt',d:'Power BI',c:'var(--accent)'}])}
+  <h2 id="s-work">What I built</h2>
+  <ul>
+   <li>Structured Streaming jobs with watermarking and exactly-once stateful aggregations for real-time alerts.</li>
+   <li>CDC from Azure SQL Database and MySQL with change tracking at under 5-minute latency.</li>
+   <li>Kimball star schemas with SCD Type 2 history, served through Power BI.</li>
+   <li>Metadata-driven ADF pipelines (Mapping Data Flows, Copy Activity, tumbling-window triggers) for self-service onboarding of new sources.</li>
+   <li>Gold data loaded into Snowflake via the Spark connector, with dbt models for reporting.</li>
+   <li>A Python data quality framework on Great Expectations and dbt tests.</li>
+  </ul>
+  <h2 id="s-results">Results</h2>
+  <ul><li><strong>2× streaming throughput</strong> through checkpoint and shuffle tuning.</li><li><strong>99.9% uptime</strong> with Azure Monitor and Log Analytics alerting.</li><li><strong>50% lower storage cost</strong> with Delta compaction and archive tiers.</li></ul>`,
+  toc:[["s-scope","Scope"],["s-arch","Architecture"],["s-work","What I built"],["s-results","Results"]]
+ },
+ "yelp-sentiment":{
+  tag:"Academic · NLP", title:"NLP sentiment analysis on Yelp reviews",
+  lede:"A text-classification pipeline over tens of thousands of Yelp reviews, from raw text to classifiers reaching 88%+ accuracy.",
+  links:[],
+  facts:[["Type","Academic project"],["Period","2024 – 2025"],["Stack","Python · Pandas"],["Result","88%+ accuracy"]],
+  body:`
+  <h2 id="s-pipe">Pipeline</h2>
+  ${flow([{k:'Load',t:'Yelp reviews',d:'Tens of thousands of records'},{k:'Clean',t:'Pandas',d:'Normalise and tokenize'},{k:'Features',t:'TF-IDF',d:'Weighted n-gram vectors'},{k:'Model',t:'Classifiers',d:'Trained and compared'},{k:'Evaluate',t:'88%+ accuracy',d:'Held-out test set',c:'var(--accent)'}])}
+  <h2 id="s-what">What I did</h2>
+  <ul><li>Built a Python and Pandas pipeline to clean and tokenize tens of thousands of reviews.</li><li>Engineered TF-IDF features to represent review text.</li><li>Trained and evaluated classifiers, reaching 88%+ accuracy on sentiment.</li></ul>
+  <h2 id="s-why">Why it matters</h2>
+  <p>The same review-sentiment idea later became a live component of CommercePulse, where a HuggingFace transformer scores product reviews inside the lakehouse.</p>`,
+  toc:[["s-pipe","Pipeline"],["s-what","What I did"],["s-why","Why it matters"]]
+ },
+ "aws-attendance":{
+  tag:"Academic · Cloud", title:"AWS serverless attendance system",
+  lede:"Face-recognition attendance on a fully serverless AWS backend, with monitoring and automated deployment.",
+  links:[],
+  facts:[["Type","Academic project"],["Period","2020 – 2021"],["Cloud","AWS"],["Pattern","Serverless"]],
+  body:`
+  <h2 id="s-arch">Architecture</h2>
+  ${flow([{k:'Capture',t:'Image upload',d:'Stored in S3'},{k:'Trigger',t:'AWS Lambda',d:'Python handler'},{k:'Match',t:'Rekognition',d:'Facial matching'},{k:'Record',t:'DynamoDB',d:'Attendance entries'},{k:'Observe',t:'CloudWatch',d:'Logs and metrics',c:'var(--accent)'}])}
+  <h2 id="s-what">What I built</h2>
+  <ul><li>A serverless backend on Lambda, S3, Rekognition and DynamoDB.</li><li>A Python facial-matching pipeline that records attendance automatically.</li><li>CloudWatch monitoring and automated CI/CD deployment.</li></ul>`,
+  toc:[["s-arch","Architecture"],["s-what","What I built"]]
+ }
+};
+const ORDER=["commerce-pulse","telecom-lakehouse","healthcare-streaming","yelp-sentiment","aws-attendance"];
+
+function projectPage(id){
+  const p=PROJECTS[id]; if(!p) return null;
+  const i=ORDER.indexOf(id), nx=ORDER[(i+1)%ORDER.length];
+  const back='<a class="back" href="#/projects"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M11 18l-6-6 6-6"/></svg>All projects</a>';
+  const links=p.links.map(l=>'<a class="btn btn-primary" href="'+l[1]+'" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2a10 10 0 0 0-3.16 19.49c.5.09.68-.22.68-.48v-1.7c-2.78.6-3.37-1.34-3.37-1.34-.45-1.16-1.11-1.47-1.11-1.47-.91-.62.07-.61.07-.61 1 .07 1.53 1.03 1.53 1.03.9 1.52 2.34 1.08 2.91.83.09-.65.35-1.09.63-1.34-2.22-.25-4.55-1.11-4.55-4.94 0-1.09.39-1.98 1.03-2.68-.1-.25-.45-1.27.1-2.64 0 0 .84-.27 2.75 1.02a9.6 9.6 0 0 1 5 0c1.91-1.29 2.75-1.02 2.75-1.02.55 1.37.2 2.39.1 2.64.64.7 1.03 1.59 1.03 2.68 0 3.84-2.34 4.68-4.57 4.93.36.31.68.92.68 1.85V21c0 .27.18.58.69.48A10 10 0 0 0 12 2z"/></svg>'+l[0]+'</a>').join('');
+  return '<div class="view wrap"><div class="page-hero">'+back+'<span class="eyebrow">'+p.tag+'</span><h1>'+p.title+'</h1><p class="lede">'+p.lede+'</p><div class="hero-cta">'+links+'<a class="btn btn-ghost" href="#contact">Discuss this project</a></div>'+
+    '<div class="facts">'+p.facts.map(f=>'<div><small>'+f[0]+'</small><b>'+f[1]+'</b></div>').join('')+'</div></div>'+
+    '<div class="article"><nav class="toc" aria-label="On this page">'+p.toc.map(t=>'<a href="#" data-jump="'+t[0]+'">'+t[1]+'</a>').join('')+'</nav><div class="prose">'+p.body+
+    '<div class="next-grid"><a class="next" href="#/p/'+nx+'"><small>Next project</small><b>'+PROJECTS[nx].title+' →</b></a><a class="next" href="#/how-i-build"><small>Approach</small><b>How I build →</b></a></div></div></div></div>';
+}
+
+/* ---------- theme ---------- */
+const root=document.documentElement;
+function sysDark(){return window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches}
+try{const t=localStorage.getItem('sk-theme'); if(t==='dark'||t==='light') root.setAttribute('data-theme',t);}catch(e){}
+document.getElementById('themeBtn').addEventListener('click',()=>{
+  const cur=root.getAttribute('data-theme')||(sysDark()?'dark':'light');
+  const nx=cur==='dark'?'light':'dark';
+  root.setAttribute('data-theme',nx);
+  try{localStorage.setItem('sk-theme',nx)}catch(e){}
+});
+
+/* ---------- router ---------- */
+const app=document.getElementById('app');
+const SECTIONS=['home','projects','skills','domain','experience','education','achievements','contact'];
+let rollTimer=null, current='';
+function render(){
+  const h=decodeURIComponent(location.hash||'');
+  let page='home', section=null;
+  if(h.startsWith('#/')){
+    const path=h.slice(2);
+    if(path==='' ) page='home';
+    else if(SECTIONS.includes(path)){page='home';section=path}
+    else if(path==='how-i-build'||path==='resume') page=path;
+    else if(path.startsWith('p/')&&PROJECTS[path.slice(2)]) page='p:'+path.slice(2);
+    else page='home';
+  } else if(h.length>1){ section=h.slice(1); }
+  if(page!==current){
+    clearInterval(rollTimer);
+    if(page.startsWith('p:')) app.innerHTML=projectPage(page.slice(2));
+    else app.innerHTML=document.getElementById('t-'+page).innerHTML;
+    current=page;
+    document.title = page==='home' ? 'Srinivas Koya | Data Engineer' : (page==='resume' ? 'Resume · Srinivas Koya' : page==='how-i-build' ? 'How I Build · Srinivas Koya' : PROJECTS[page.slice(2)].title+' · Srinivas Koya');
+    if(page==='home') initHome();
+    if(page==='resume'){const b=document.getElementById('printBtn'); b&&b.addEventListener('click',()=>window.print());}
+    app.querySelectorAll('[data-jump]').forEach(a=>a.addEventListener('click',e=>{e.preventDefault();const t=document.getElementById(a.dataset.jump);t&&t.scrollIntoView({behavior:'smooth',block:'start'})}));
+    if(!section) window.scrollTo({top:0,behavior:'instant'});
+  }
+  if(section){
+    const el=document.getElementById(section);
+    if(el) requestAnimationFrame(()=>el.scrollIntoView({behavior:'smooth',block:'start'}));
+  }
+  closeMenu(); markNav(page);
+}
+function markNav(page){
+  document.querySelectorAll('#nav a').forEach(a=>{
+    const href=a.getAttribute('href');
+    a.classList.toggle('on',(page==='how-i-build'&&href==='#/how-i-build')||(page==='resume'&&href==='#/resume')||(page.startsWith('p:')&&href==='#projects'));
+  });
+}
+/* section links (#skills) when on a sub page: route home then scroll */
+document.addEventListener('click',e=>{
+  const a=e.target.closest('a[href^="#"]'); if(!a) return;
+  const href=a.getAttribute('href');
+  if(href.startsWith('#/')) return;
+  const id=href.slice(1);
+  if(current!=='home'&&SECTIONS.includes(id)){ e.preventDefault(); location.hash='#/'+id; }
+  else if(current==='home'&&SECTIONS.includes(id)){ e.preventDefault(); const el=document.getElementById(id); el&&el.scrollIntoView({behavior:'smooth',block:'start'}); history.replaceState(null,'','#'+id); closeMenu(); }
+});
+window.addEventListener('hashchange',render);
+
+/* ---------- home widgets ---------- */
+function initHome(){
+  const roll=document.getElementById('roll'); if(roll){
+    const n=roll.children.length; let i=0;
+    const box=roll.parentElement;
+    const fit=()=>{ box.style.width=roll.children[i].scrollWidth+'px'; };
+    box.style.transition='width .6s cubic-bezier(.22,.8,.24,1)'; fit();
+    if(!matchMedia('(prefers-reduced-motion: reduce)').matches){
+      rollTimer=setInterval(()=>{
+        i++; roll.style.transition='transform .7s cubic-bezier(.22,.8,.24,1)';
+        roll.style.transform='translateY(-'+(i*1.25)+'em)'; fit();
+        if(i===n-1){ setTimeout(()=>{roll.style.transition='none';i=0;roll.style.transform='translateY(0)';},720); }
+      },2400);
+    }
+  }
+  // count-up on stats (starts from the real value's visible state)
+  document.querySelectorAll('[data-count]').forEach(el=>{
+    const end=+el.dataset.count, suf=el.dataset.suffix||''; if(matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    let s=null; const dur=1200;
+    const step=t=>{ if(!s) s=t; const p=Math.min((t-s)/dur,1); const v=Math.round(end*(1-Math.pow(1-p,3))); el.textContent=Math.max(v,1)+suf; if(p<1) requestAnimationFrame(step); };
+    requestAnimationFrame(step);
+  });
+}
+
+/* ---------- header + mobile menu ---------- */
+const hdr=document.getElementById('hdr');
+addEventListener('scroll',()=>hdr.classList.toggle('scrolled',scrollY>8),{passive:true});
+const menuBtn=document.getElementById('menuBtn'), mnav=document.getElementById('mnav');
+function closeMenu(){mnav.classList.remove('open');menuBtn.setAttribute('aria-expanded','false')}
+menuBtn.addEventListener('click',()=>{const o=mnav.classList.toggle('open');menuBtn.setAttribute('aria-expanded',String(o))});
+
+render();
+</script>
+
+</body>
+</html>
